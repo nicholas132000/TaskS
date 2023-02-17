@@ -7,6 +7,9 @@ import se.edu.inclass.task.TaskNameComparator;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 public class Main {
 
@@ -16,6 +19,20 @@ public class Main {
         System.out.println("Welcome to Task (stream) manager\n");
         DataManager dm = new DataManager("./data/data.txt");
         ArrayList<Task> tasksData = dm.loadData();
+
+<<<<<<< HEAD
+//        printData(tasksData);
+        System.out.println();
+        System.out.println("Printing deadlines before sorting");
+        printDeadlines(tasksData);
+
+        System.out.println("Total number of deadlines: " + countDeadlines(tasksData));
+        System.out.println("Printing deadlines after sorting");
+        printDeadlinesUsingStream(tasksData);
+
+        ArrayList<Task> filteredList = filterTaskListUsingStreams(tasksData, "11");
+        System.out.println("Filtered List of tasks:");
+        printData(filteredList);
 
 
 //        System.out.println();
@@ -27,6 +44,7 @@ public class Main {
 //        printDataUsingStreams(tasksData);
         printDataUsingStreams(tasksData);
         System.out.println("Total number of deadlines using stream: " + countDeadlinesUsingStream(tasksData));
+
     }
 
     private static int countDeadlines(ArrayList<Task> tasksData) {
@@ -68,10 +86,20 @@ public class Main {
         }
     }
 
-    public static void printDeadlineUsingStream(ArrayList<Task> tasks) {
-        System.out.println("Printing deadlines using stream");
+    public static void printDeadlinesUsingStream(ArrayList<Task> tasks) {
         tasks.stream()
-                .filter(t -> t instanceof Deadline)  // filter takes a predicate
+                .filter(t -> t instanceof Deadline)
+                .sorted((a, b) -> a.getDescription().compareToIgnoreCase(b.getDescription()))
                 .forEach(System.out::println);
     }
+
+    public static ArrayList<Task> filterTaskListUsingStreams(ArrayList<Task> tasks, String filterString) {
+        ArrayList<Task> filteredList = (ArrayList<Task>) tasks.stream();
+        tasks.stream()
+                .filter(t -> t.getDescription().contains(filterString))
+                .collect(toList());
+
+        return filteredList;
+    }
+
 }
